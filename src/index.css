@@ -1,0 +1,17 @@
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Removes white background */
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(230, 208, 208, 0.4) transparent;
+}
+
+.custom-card-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #f05c4cd1 transparent;
+}
+
+.custom-header-font {
+  font-family: "Roboto Slab", sans-serif;
+}
