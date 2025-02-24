@@ -34,6 +34,7 @@ function App() {
   const [sortWeekAsc, setSortWeekAsc] = useState(true);
   const [error, setError] = useState("");
 
+  //STORE TASKS
   useEffect(() => {
     const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
     setTasks(savedTasks);
@@ -44,13 +45,14 @@ function App() {
   }, [tasks]);
 
   const handleAddOrEditTask = () => {
+    //in case of empty task title
     if (!taskTitle.trim()) {
       setError("Please enter a task title.");
       return;
     }
-
     setError("");
 
+    //if edit
     if (editingTaskIndex !== null) {
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
@@ -61,6 +63,7 @@ function App() {
       );
       setEditingTaskIndex(null);
     } else {
+      //if add new task
       const newTask = {
         id: Date.now(),
         title: taskTitle,
@@ -77,6 +80,7 @@ function App() {
     setPriority("To Do");
   };
 
+  //save edited task
   const handleEditTask = (taskId) => {
     const taskToEdit = tasks.find((task) => task.id === taskId);
     if (!taskToEdit) return;
@@ -87,6 +91,7 @@ function App() {
     setEditingTaskIndex(taskId);
   };
 
+  //archive task
   const handleArchiveTask = (taskId) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to archive this task?"
@@ -97,6 +102,7 @@ function App() {
     }
   };
 
+  //mark task as completed
   const handleToggleComplete = (taskId) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
@@ -105,6 +111,7 @@ function App() {
     );
   };
 
+  //restore task - complete to incomplete
   const handleRestoreTask = (taskId) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
@@ -113,6 +120,21 @@ function App() {
     );
   };
 
+  //mark all tasks as completed at once
+  const handleCompleteAllTasks = () => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        !task.completed ? { ...task, completed: true } : task
+      )
+    );
+  };
+
+  //archive all tasks at once
+  const handleArchiveAllTasks = () => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.completed));
+  };
+
+  //FILTER TASKS
   const tasksDueToday = tasks.filter(
     (task) =>
       !task.completed &&
@@ -461,15 +483,33 @@ function App() {
             )}
           </Card>
 
-          {/* BUTTON FOR OPENING VIEW COMPLETED TASKS MODAL */}
-          <Button
-            className="border-0 fw-bold text-center mt-1"
-            style={{ backgroundColor: "#F4512C" }}
-            onClick={() => setShowCompletedModal(true)}
-          >
-            <RiCheckboxFill size={18} className="me-1 mb-1" />
-            View Completed Tasks
-          </Button>
+          {/* BUTTON FOR OPENING VIEW COMPLETED TASKS MODAL, MARKING ALL TASKS AS COMPLETE, ARCHIVING ALL TASKS */}
+          <Container className="px-0 mt-1 d-flex justify-content-center">
+            <Button
+              className="border-0 fw-bold text-center"
+              style={{ backgroundColor: "#5E1B89" }}
+              onClick={() => setShowCompletedModal(true)}
+            >
+              <RiCheckboxFill size={18} className="me-1 mb-1" />
+              View Completed Tasks
+            </Button>
+            <Button
+              className="border-0 fw-bold text-center mx-2"
+              style={{ backgroundColor: "#F4512C" }}
+              onClick={handleCompleteAllTasks}
+            >
+              <RiCheckboxCircleFill size={18} className="me-1 mb-1" />
+              Complete All Tasks
+            </Button>
+            <Button
+              className="border-0 fw-bold text-center"
+              style={{ backgroundColor: "#F4512C" }}
+              onClick={handleArchiveAllTasks}
+            >
+              <RiDeleteBin4Fill size={18} className="me-1 mb-1" />
+              Archive All Tasks
+            </Button>
+          </Container>
         </Col>
       </Row>
 
